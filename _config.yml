@@ -99,15 +99,25 @@ content:
           USB 보안 키 (FIDO 지문 인증 장치)
         description: | # this will include new lines to allow paragraphs
           지문 인식 기반 FIDO2 하드웨어 보안 장치를 개발하고 보안 인증을 진행했습니다.
-          - ARM Cortex-M0/M3 기반 장치 펌웨어 개발
+          - ARM Cortex-M0/M3 기반 장치 펌웨어 개발: 부트로더 작성, 펌웨어 무결성 검증 및 데이터 암호화
+          - RFC 4226(HOTP), RFC 6238(TOTP) 개발
+          - USB HID FIDO/키보드 장치 개발
+          - Biometric 인증 (지문인증, 알고리즘 포팅, 드라이버 작성) 개발
           - FIDO2.1 (CTAP2.1) 개발 (~2020. 09)
           - FIDO2 (CTAP2) 개발 및 L2 보안 인증 획득 (~2019. 03)
           - FIDO U2F 개발 및 L2 보안 인증 획득 (~2018. 07)
           - FIDO UAF 개발 및 Win32 library 개발/고객사 전달 (~2018. 04)
-          - RFC 4226(HOTP), RFC 6238(TOTP) 개발
-          - USB HID FIDO/키보드 장치 개발
-          - Biometric 인증 (Fingerprint, 알고리즘 포팅, 드라이버 작성) 개발
-          - 부트로더 작성, 펌웨어 무결성 검증 및 데이터 암호화
+
+      - layout: left
+        title: NPT-Sonicure
+        sub_title: (주)오스테오시스
+        caption: 2020. 00. - 2020. 00.
+        quote: >
+          디지털 array 컨트롤 기반 체외충격파치료(ESWT) 의료기기
+        description: | # this will include new lines to allow paragraphs
+          치료기 장비 제어를 위한 펌웨어 개발
+          - AVR 펌웨어 개발: 통신 및 FPGA 제어, 전원 제어, 부트로더 개발
+          - 장비 검증 및 테스트, 양산 이관
 
   - title: Experience # Title for the section
     layout: list # Type of content section (list/text)
