@@ -36,29 +36,60 @@ additional_links:
 # about_title: About Me
 about_profile_image: images/profile.jpg
 about_content: | # this will include new lines to allow paragraphs
+  블록체인 관련 서비스를 개발하고 있습니다. 블록체인 기술과 관련 비즈니스에 흥미가 있습니다.
 
+  이더리움 및 EOSIO 기반 블록체인에 컨트렉트와 DApp을 작성하고 배포했습니다.
 
-  I am most skilled in: <mark>AWS</mark> and <mark>Eating Pizza</mark>
+  생소한 기술에 문서를 보고 빠르게 습득합니다. 관련 키워드를 찾아내고 상대방에게 안내할 수 있습니다.
+
+  오픈 소스 프로젝트에 기여할 기회를 노리고 있습니다.
+
+  백엔드 서버 개발에 흥미를 갖고 공부 중입니다.
+
+  리눅스 개발환경에 익숙하고, git 및 git 플랫폼을 활용한 버전 관리에 능숙합니다.
 
 content:
-  - title: Projects # Title for the section
+  - title: Project # Title for the section
     layout: list # Type of content section (list/text)
     content:
-      - layout: top-middle
-        title: Super awesome project
-        link: github.com/sproogen
-        # link_text: Project Website
-        additional_links:
-          - title:  sproogen/modern-resume-theme
-            icon: fab fa-github
-            url: github.com/sproogen/modern-resume-theme
-          # - title:  Github page for project (eg. sproogen/modern-resume-theme)
-          #   icon: fab fa-github
-          #   url: Link to project (eg. sproogen.github.io/modern-resume-theme)
+      - layout: left
+        title: OmniOne Badge
+        sub_title: 라온시큐어(주)
+        caption: 2023. 00. - 2023. 00.
+        link: https://badge.omnione.net
         quote: >
-          This is probably one of the greatest apps ever created, if you don't agree you're probably wrong.
+          블록체인 기반 OpenBadge 발행 서비스
         description: | # this will include new lines to allow paragraphs
-          I started this project as a way if learning <mark>React</mark> and it has since grown into a fully fledged app. I have learned many skills through this and been I'm very proud of having this in my portfolio. If you don't have a project as awesome as this I would advise you make one.
+          JSON 형식 인증서를 발행 및 호스팅, 디스플레이 하는 서비스입니다.
+
+          OpenBadge 2.0에 Blockcerts 확장을 구현했습니다.
+
+          - 발행: 인증서의 Merkle root를 블록체인 트렌젝션 값으로 싣어 burn address로 송금합니다.
+          - 검증: 블록체인 트렌젝션을 조회하여 인증서에 Merkle tree를 검증합니다.
+
+          Alchemy Provider를 사용하고, NestJS REST API 백엔드 서버와 NextJS 웹 프론트엔드를 작성했습니다.
+
+          compose 파일을 작성하여 AWS EC2상에 docker로 배포했습니다.
+
+          다양한 환경(로컬-개발-테스트-운영)에 따른 빌드 및 배포를 스크립트를 작성하여 자동화 했습니다.
+
+      - layout: left
+        title: OmniOne NFT Marketplace
+        sub_title: 라온시큐어(주)
+        caption: 2022. 00. - 2023. 00.
+        link: https://nft.omnione.net
+        quote: >
+          NFT 마켓플레이스
+        description: | # this will include new lines to allow paragraphs
+          EOSIO 기반 블록체인인 (OmniOne)[https://omnione.net] 블록체인 컨트렉트를 작성했습니다.
+
+          NFT 서비스를 위해 전송(+ 발행, 폐기)와 approve, setApproveForAll 기능을 구현했습니다.
+
+          컨트렉트 결함 방지를 위해 테스트 코드를 작성했습니다. (커버리지 100%)
+
+          백엔드 서버 개발자를 위해 xxx 분량의 README를 작성하고, 데이터 인코딩을 작성하여 전달 했습니다.
+
+          운영을 위한 관리 기능을 구현하고, admin 웹 페이지를 작성하여 운영 담당자가 문제 상황에 사용하도록 가이드했습니다.
 
   - title: Experience # Title for the section
     layout: list # Type of content section (list/text)
