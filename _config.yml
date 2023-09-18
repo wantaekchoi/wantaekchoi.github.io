@@ -102,7 +102,7 @@ content:
           - ARM Cortex-M0/M3 기반 장치 펌웨어 개발: 부트로더 작성, 펌웨어 무결성 검증 및 데이터 암호화
           - RFC 4226(HOTP), RFC 6238(TOTP) 개발
           - USB HID FIDO/키보드 장치 개발
-          - Biometric 인증 (지문인증, 알고리즘 포팅, 드라이버 작성) 개발
+          - 생체 인증 (지문인증, 알고리즘 포팅, 드라이버 작성) 개발
           - FIDO2.1 (CTAP2.1) 개발 (~2020. 09)
           - FIDO2 (CTAP2) 개발 및 L2 보안 인증 획득 (~2019. 03)
           - FIDO U2F 개발 및 L2 보안 인증 획득 (~2018. 07)
@@ -123,41 +123,59 @@ content:
     layout: list # Type of content section (list/text)
     content:
       - layout: left
-        title: The Boring Company
-        link: boringcompany.com
-        # link_text: boringcompany.com
-        sub_title: Senior Network System Administrator
-        caption: November 2017 - Present
+        title: 라온시큐어(주)
+        link: https://www.raonsecure.com
+        sub_title: 블록체인기술연구소
+        caption: 2022. 01. (재직 중)
         quote: >
-          Solving 21st century problems by diging holes and making game changing products like the *not a flamethrower*
+          회사 소개 1234
         description: | # this will include new lines to allow paragraphs
-            Every company needs its networks properly administered and The Boring Compay is no exception. Digging holes is hard and I play my part making sure the whole company stays connected. I lead a team of 5 people and enjoy driving the company to try new technologies.
+          - 주요 실적 1
+          - 주요 실적 2
+          - 주요 업무 1
+          - 주요 업무 2
+
+      - layout: left
+        title: (주)오스테오시스
+        link: https://osteosys.com
+        sub_title: NMD 사업부
+        caption: 2022. 09. - 2021. 12. (x년 x개월)
+        quote: >
+          회사 소개 1234
+        description: | # this will include new lines to allow paragraphs
+          - 주요 실적 1
+          - 주요 실적 2
+          - 주요 업무 1
+          - 주요 업무 2
+
+      - layout: left
+        title: 주식회사 트러스트키, (주)이더블유비엠
+        link: https://www.trustkey.kr
+        sub_title: 기술연구소
+        caption: 2016. 10. - 2020. 09. (x년 x개월)
+        quote: >
+          회사 소개 1234
+        description: | # this will include new lines to allow paragraphs
+          - 주요 실적 1
+          - 주요 실적 2
+          - 주요 업무 1
+          - 주요 업무 2
+
 
   - title: Education # Title for the section
     layout: list # Type of content section (list/text)
     content:
       - layout: left
-        title: Harvard University
-        caption: 2010 - 2013
-        sub_title: BSc Computer Science
-        quote: >
-          Established in 1636, Harvard is the oldest higher education institution in the United States, and is widely regarded in terms of its influence, reputation, and academic pedigree as a leading university in not just the US but also the world.
+        title: 한국산업기술대학교
+        caption: 2011. 03. - 2017. 02.
+        sub_title: 컴퓨터공학과
         description: | # this will include new lines to allow paragraphs
-          During my time at Harvard I learnt most of my key skills that have I have taken through my career such as teamwork and working to tight deadlines. I thouroughly enjoyed my time as university and learnt a lot about a healthy work life balance.
+          이수과목 및 연구내용 ..
 
-          I spent a lot of my free time as a committee member of the *Harvard Mountaineering Club* taking on roles such as *Trip Secretary* and *Vice-President*.
-
-  - title: A Little More About Me
-    layout: text
-    content: | # this will include new lines to allow paragraphs
-      Alongside my interests in networks and software engineering some of my other interests and hobbies are:
-      - Rock climbing
-      - Gaming
-      - Knitting
-      - [Becoming a ninja](https://www.youtube.com/watch?v=vtg4o__aRMg)
-
-      Look at this cool image
-      ![Trees](/modern-resume-theme/images/landscape-trees.jpg "Trees")
+      - layout: left
+        title: 안양고등학교
+        caption: 2008. 03. - 2011. 02.
+        sub_title: 인문계열 # 고등학교 학력 사항을 넣어야 하는가?
 
 # Footer
 footer_show_references: true
