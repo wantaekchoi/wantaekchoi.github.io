@@ -81,7 +81,7 @@ content:
         quote: >
           NFT 마켓플레이스
         description: | # this will include new lines to allow paragraphs
-          EOSIO 기반 블록체인인 (OmniOne)[https://omnione.net] 블록체인 컨트렉트를 작성했습니다.
+          EOSIO 기반 블록체인인 OmniOne 블록체인 컨트렉트를 작성했습니다. (EOSIO-CPP)
 
           NFT 서비스를 위해 전송(+ 발행, 폐기)와 approve, setApproveForAll 기능을 구현했습니다.
 
@@ -90,6 +90,24 @@ content:
           백엔드 서버 개발자를 위해 xxx 분량의 README를 작성하고, 데이터 인코딩을 작성하여 전달 했습니다.
 
           운영을 위한 관리 기능을 구현하고, admin 웹 페이지를 작성하여 운영 담당자가 문제 상황에 사용하도록 가이드했습니다.
+
+      - layout: left
+        title: 트러스트키
+        sub_title: 주식회사 트러스트키
+        caption: 2016. 00. - 2020. 00.
+        quote: >
+          USB 보안 키 (FIDO 지문 인증 장치)
+        description: | # this will include new lines to allow paragraphs
+          지문 인식 기반 FIDO2 하드웨어 보안 장치를 개발하고 보안 인증을 진행했습니다.
+          - ARM Cortex-M0/M3 기반 장치 펌웨어 개발
+          - FIDO2.1 (CTAP2.1) 개발 (~2020. 09)
+          - FIDO2 (CTAP2) 개발 및 L2 보안 인증 획득 (~2019. 03)
+          - FIDO U2F 개발 및 L2 보안 인증 획득 (~2018. 07)
+          - FIDO UAF 개발 및 Win32 library 개발/고객사 전달 (~2018. 04)
+          - RFC 4226(HOTP), RFC 6238(TOTP) 개발
+          - USB HID FIDO/키보드 장치 개발
+          - Biometric 인증 (Fingerprint, 알고리즘 포팅, 드라이버 작성) 개발
+          - 부트로더 작성, 펌웨어 무결성 검증 및 데이터 암호화
 
   - title: Experience # Title for the section
     layout: list # Type of content section (list/text)
