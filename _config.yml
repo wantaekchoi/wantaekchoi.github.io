@@ -7,7 +7,7 @@ version: 2
 
 # Personal info
 name: 최완택
-title: 개발자
+title: 소프트웨어 엔지니어
 email: wantaekchoi@gmail.com
 # website: https://choiwantaek.tistory.com
 
@@ -74,6 +74,15 @@ content:
           다양한 환경(로컬-개발-테스트-운영)에 따른 빌드 및 배포를 스크립트를 작성하여 자동화 했습니다.
 
       - layout: left
+        title: OmniOne x SMATh NFT Swap
+        sub_title: 라온시큐어(주)
+        caption: 2023. 00. - 2023. 00.
+        quote: >
+          이더리움 NFT Swap 금 실물 교환 서비스
+        description: | # this will include new lines to allow paragraphs
+          컨트렉트, 서버 개발. Next.js
+
+      - layout: left
         title: OmniOne NFT Marketplace
         sub_title: 라온시큐어(주)
         caption: 2022. 00. - 2023. 00.
@@ -123,13 +132,11 @@ content:
         link: https://www.raonsecure.com
         sub_title: 블록체인기술연구소
         caption: 2022. 01. (재직 중)
-        quote: >
-          회사 소개 1234
+        quote: |
+          라온시큐어는 모바일 보안∙인증 분야 선도기업으로 금융, 공공, 국방 등 다양한 분야에서 쌓아온 노하우와 레퍼런스를 바탕으로 고객에게 안전하고 편리한 디지털 환경을 제공하고 있습니다.
         description: | # this will include new lines to allow paragraphs
-          - 주요 실적 1
-          - 주요 실적 2
-          - 주요 업무 1
-          - 주요 업무 2
+          - OmniOne Badge 설계 개발, OmniOne NFT 설계, 컨트렉트 개발, OmniOne x SMATh 설계, 개발 ..
+          - 서비스 설계, AWS 인스턴스 관리, 서비스 개발, 컨트렉트 개발 다 했다
 
       - layout: left
         title: (주)오스테오시스
@@ -137,12 +144,9 @@ content:
         sub_title: NMD 사업부
         caption: 2022. 09. - 2021. 12. (x년 x개월)
         quote: >
-          회사 소개 1234
+          오스테오시스는 골다공증, 체성분분석, 근감소증, 통증관리 등, 근골격계 질환에 관한 종합적인 솔루션을 제공하는 헬스케어 기업입니다.
         description: | # this will include new lines to allow paragraphs
-          - 주요 실적 1
-          - 주요 실적 2
-          - 주요 업무 1
-          - 주요 업무 2
+          - 의료기기 펌웨어 개발 ..
 
       - layout: left
         title: 주식회사 트러스트키, (주)이더블유비엠
@@ -150,12 +154,9 @@ content:
         sub_title: 기술연구소
         caption: 2016. 10. - 2020. 09. (x년 x개월)
         quote: >
-          회사 소개 1234
+          eWBMIoT 제품&서비스eWBM은 IoT 토탈 솔루션을 제공하여 사물-사람간의 무한 정보 교환을 가능하게 합니다. TRUSTKEYFIDO Solution트러스트키는 FIDO 인증 디바이스부터 서버 및 솔루션까지 고객 맞춤형 토탈 서비스를 제공하고있습니다.
         description: | # this will include new lines to allow paragraphs
-          - 주요 실적 1
-          - 주요 실적 2
-          - 주요 업무 1
-          - 주요 업무 2
+          - 보안 동글 펌웨어 개발, 인증 ..
 
 
   - title: Education # Title for the section
