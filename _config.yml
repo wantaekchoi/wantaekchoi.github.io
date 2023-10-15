@@ -7,7 +7,7 @@ version: 2
 
 # Personal info
 name: 최완택
-title: 소프트웨어 엔지니어
+title: 개발자
 email: wantaekchoi@gmail.com
 # website: https://choiwantaek.tistory.com
 
@@ -36,17 +36,13 @@ additional_links:
 # about_title: About Me
 about_profile_image: images/profile.jpg
 about_content: | # this will include new lines to allow paragraphs
-  블록체인 관련 서비스를 개발하고 있습니다. 블록체인 기술과 관련 비즈니스에 흥미가 있습니다.
+  블록체인 개발자입니다. 이더리움 및 EOSIO를 활용한 DApp 개발 경험을 가지고 있습니다.
 
-  이더리움 및 EOSIO 기반 블록체인에 컨트렉트와 DApp을 작성하고 배포했습니다.
+  새로운 기술 학습과 문제 해결 능력을 바탕으로 다양한 프로젝트에 참여하였으며,
 
-  생소한 기술에 문서를 보고 빠르게 습득합니다. 관련 키워드를 찾아내고 상대방에게 안내할 수 있습니다.
+  보안 및 블록체인 관련 알고리즘에 대한 이해를 바탕으로 안정적인 서비스를 제공합니다.
 
-  보안이나 블록체인에서 활용되는 다양한 cryto 알고리즘을 파악하고 사용합니다.
-
-  오픈 소스 프로젝트에 기여할 기회를 노리고 있습니다. 백엔드 서버 개발에 흥미를 갖고 공부 중입니다.
-
-  리눅스 개발환경에 익숙하고, git 및 git 플랫폼을 활용한 버전 관리에 능숙합니다.
+  백엔드 서버 개발에 대한 지속적인 학습을 이어가고 있습니다.
 
 content:
   - title: Project # Title for the section
@@ -60,18 +56,19 @@ content:
         quote: >
           블록체인 기반 OpenBadge 발행 서비스
         description: | # this will include new lines to allow paragraphs
-          JSON 형식 인증서를 발행 및 호스팅, 디스플레이 하는 서비스입니다.
+          JSON 형식의 인증서 발행, 호스팅, 디스플레이 기능을 제공합니다.
 
-          OpenBadge 2.0에 Blockcerts 확장을 구현했습니다.
+          OpenBadge 2.0의 Blockcerts 확장을 구현했습니다.
 
-          - 발행: 인증서의 Merkle root를 블록체인 트렌젝션 값으로 싣어 burn address로 송금합니다.
-          - 검증: 블록체인 트렌젝션을 조회하여 인증서에 Merkle tree를 검증합니다.
+          - 발행: 인증서의 Merkle root를 블록체인 트랜잭션에 기록하고 burn address로 전송하여 인증서를 발행합니다.
 
-          Alchemy Provider를 사용하고, NestJS REST API 백엔드 서버와 NextJS 웹 프론트엔드를 작성했습니다.
+          - 검증: 블록체인 트랜잭션 데이터를 조회하여 인증서의 Merkle tree를 검증합니다.
 
-          compose 파일을 작성하여 AWS EC2상에 docker로 배포했습니다.
+          기술 스택에는 Alchemy Provider, NestJS 기반 RESTful API 서버, 그리고 NextJS 프론트엔드가 포함됩니다.
 
-          다양한 환경(로컬-개발-테스트-운영)에 따른 빌드 및 배포를 스크립트를 작성하여 자동화 했습니다.
+          compose 파일을 작성하여 AWS EC2 인스턴스에 Docker로 했습니다.
+
+          다양한 환경(로컬, 개발, 테스트, 운영)에 빌드 및 배포 과정에서 휴먼 에러를 최소화 하기 위해, 자동화 스크립트를 작성하여 프로세스의 효율과 안정성을 제고했습니다.
 
       - layout: left
         title: OmniOne x SMATh NFT Swap
@@ -80,7 +77,7 @@ content:
         quote: >
           이더리움 NFT Swap 금 실물 교환 서비스
         description: | # this will include new lines to allow paragraphs
-          컨트렉트, 서버 개발. Next.js
+          AWS를 활용한 서비스 설계, 이더리움 NFT Swap 서버, 컨트렉트 개발 등을 수행했습니다.
 
       - layout: left
         title: OmniOne NFT Marketplace
@@ -136,7 +133,7 @@ content:
           라온시큐어는 모바일 보안∙인증 분야 선도기업으로 금융, 공공, 국방 등 다양한 분야에서 쌓아온 노하우와 레퍼런스를 바탕으로 고객에게 안전하고 편리한 디지털 환경을 제공하고 있습니다.
         description: | # this will include new lines to allow paragraphs
           - OmniOne Badge 설계 개발, OmniOne NFT 설계, 컨트렉트 개발, OmniOne x SMATh 설계, 개발 ..
-          - 서비스 설계, AWS 인스턴스 관리, 서비스 개발, 컨트렉트 개발 다 했다
+          - 서비스 설계, AWS 인스턴스 관리, 서비스 개발, 컨트렉트 개발 등
 
       - layout: left
         title: (주)오스테오시스
@@ -156,7 +153,7 @@ content:
         quote: >
           eWBMIoT 제품&서비스eWBM은 IoT 토탈 솔루션을 제공하여 사물-사람간의 무한 정보 교환을 가능하게 합니다. TRUSTKEYFIDO Solution트러스트키는 FIDO 인증 디바이스부터 서버 및 솔루션까지 고객 맞춤형 토탈 서비스를 제공하고있습니다.
         description: | # this will include new lines to allow paragraphs
-          - 보안 동글 펌웨어 개발, 인증 ..
+          - 보안 동글 펌웨어 개발, 인증 등
 
 
   - title: Education # Title for the section
@@ -166,8 +163,6 @@ content:
         title: 한국산업기술대학교
         caption: 2011. 03. - 2017. 02.
         sub_title: 컴퓨터공학과
-        description: | # this will include new lines to allow paragraphs
-          이수과목 및 연구내용 ..
 
 # Footer
 footer_show_references: false
