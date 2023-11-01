@@ -51,7 +51,7 @@ content:
       - layout: left
         title: OmniOne Badge
         sub_title: 라온시큐어(주)
-        caption: 2023. 00. - 2023. 00.
+        caption: 2023. 04. - 진행 중
         link: https://badge.omnione.net
         quote: >
           블록체인 기반 OpenBadge 발행 서비스
@@ -66,23 +66,14 @@ content:
 
           기술 스택에는 Alchemy Provider, NestJS 기반 RESTful API 서버, 그리고 NextJS 프론트엔드가 포함됩니다.
 
-          compose 파일을 작성하여 AWS EC2 인스턴스에 Docker로 했습니다.
+          compose 파일을 작성하여 AWS EC2 인스턴스에 Docker로 배포하였습니다.
 
           다양한 환경(로컬, 개발, 테스트, 운영)에 빌드 및 배포 과정에서 휴먼 에러를 최소화 하기 위해, 자동화 스크립트를 작성하여 프로세스의 효율과 안정성을 제고했습니다.
 
       - layout: left
-        title: OmniOne x SMATh NFT Swap
-        sub_title: 라온시큐어(주)
-        caption: 2023. 00. - 2023. 00.
-        quote: >
-          이더리움 NFT Swap 금 실물 교환 서비스
-        description: | # this will include new lines to allow paragraphs
-          AWS를 활용한 서비스 설계, 이더리움 NFT Swap 서버, 컨트렉트 개발 등을 수행했습니다.
-
-      - layout: left
         title: OmniOne NFT Marketplace
         sub_title: 라온시큐어(주)
-        caption: 2022. 00. - 2023. 00.
+        caption: 2022. 04. - 진행 중
         link: https://nft.omnione.net
         quote: >
           NFT 마켓플레이스
@@ -93,14 +84,23 @@ content:
 
           컨트렉트 결함 방지를 위해 테스트 코드를 작성했습니다. (커버리지 100%)
 
-          백엔드 서버 개발자를 위해 xxx 분량의 README를 작성하고, 데이터 인코딩을 작성하여 전달 했습니다.
+          도메인에 대한 이해를 돕기 위해 자세한 프로토콜과 주의점을 담은 README.md를 상세히 작성하여 전달 했습니다.
 
           운영을 위한 관리 기능을 구현하고, admin 웹 페이지를 작성하여 운영 담당자가 문제 상황에 사용하도록 가이드했습니다.
 
       - layout: left
+        title: OmniOne x SMATh NFT Swap
+        sub_title: 라온시큐어(주)
+        caption: 2022. 07. - 중단 됨
+        quote: >
+          이더리움 NFT Swap 금 실물 교환 서비스
+        description: | # this will include new lines to allow paragraphs
+          AWS를 활용한 서비스 설계, 이더리움 NFT Swap 서버, 컨트렉트 개발 등을 수행했습니다.
+
+      - layout: left
         title: 트러스트키
         sub_title: 주식회사 트러스트키
-        caption: 2016. 00. - 2020. 00.
+        caption: 2016. 07. - 2020. 09.
         quote: >
           USB 보안 키 (FIDO 지문 인증 장치)
         description: | # this will include new lines to allow paragraphs
@@ -113,7 +113,7 @@ content:
       - layout: left
         title: NPT-Sonicure
         sub_title: (주)오스테오시스
-        caption: 2020. 00. - 2020. 00.
+        caption: 2020. 09. - 2021. 12.
         quote: >
           디지털 array 컨트롤 기반 체외충격파치료(ESWT) 의료기기
         description: | # this will include new lines to allow paragraphs
@@ -132,24 +132,24 @@ content:
         quote: |
           라온시큐어는 모바일 보안∙인증 분야 선도기업으로 금융, 공공, 국방 등 다양한 분야에서 쌓아온 노하우와 레퍼런스를 바탕으로 고객에게 안전하고 편리한 디지털 환경을 제공하고 있습니다.
         description: | # this will include new lines to allow paragraphs
-          - OmniOne Badge 설계 개발, OmniOne NFT 설계, 컨트렉트 개발, OmniOne x SMATh 설계, 개발 ..
+          - OmniOne Badge 설계 개발, OmniOne NFT 설계, 컨트렉트 개발, OmniOne x SMATh 설계, 개발 등.
           - 서비스 설계, AWS 인스턴스 관리, 서비스 개발, 컨트렉트 개발 등
 
       - layout: left
         title: (주)오스테오시스
         link: https://osteosys.com
         sub_title: NMD 사업부
-        caption: 2022. 09. - 2021. 12. (x년 x개월)
+        caption: 2020. 09. - 2021. 12.
         quote: >
           오스테오시스는 골다공증, 체성분분석, 근감소증, 통증관리 등, 근골격계 질환에 관한 종합적인 솔루션을 제공하는 헬스케어 기업입니다.
         description: | # this will include new lines to allow paragraphs
-          - 의료기기 펌웨어 개발 ..
+          - 의료기기 펌웨어 개발 및 장비 검증, 양산 이관 등을 수행하였습니다.
 
       - layout: left
         title: 주식회사 트러스트키, (주)이더블유비엠
         link: https://www.trustkey.kr
         sub_title: 기술연구소
-        caption: 2016. 10. - 2020. 09. (x년 x개월)
+        caption: 2016. 10. - 2020. 09.
         quote: >
           eWBMIoT 제품&서비스eWBM은 IoT 토탈 솔루션을 제공하여 사물-사람간의 무한 정보 교환을 가능하게 합니다. TRUSTKEYFIDO Solution트러스트키는 FIDO 인증 디바이스부터 서버 및 솔루션까지 고객 맞춤형 토탈 서비스를 제공하고있습니다.
         description: | # this will include new lines to allow paragraphs
