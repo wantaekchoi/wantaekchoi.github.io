@@ -1,5 +1,5 @@
 ---
-title: 최완택 | 백엔드 개발자
+title: 최완택 | 웹 서비스 개발
 layout: default
 ---
 
