@@ -1,5 +1,3 @@
-## 최완택 | 백엔드 개발자
-
 [이메일](mailto:want­aekchoi@gmail.com) | [GitHub](https://github.com/wantaekchoi)
 
 ### 주요 성과
