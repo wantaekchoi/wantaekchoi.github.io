@@ -1,0 +1,5 @@
+# <context URI> <local file>   — signing never reaches the network
+https://www.w3.org/ns/credentials/v2                             credentials-v2.jsonld
+https://purl.imsglobal.org/spec/ob/v3p0/context-3.0.3.json       ob-v3p0-context-3.0.3.json
+https://purl.imsglobal.org/spec/ob/v3p0/extensions.json          ob-v3p0-extensions.json
+https://identity.foundation/.well-known/did-configuration/v1     did-configuration-v1.jsonld

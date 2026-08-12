@@ -1,0 +1,20 @@
+{
+  "domain": "wantaekchoi.github.io",
+  "github_username": "wantaekchoi",
+  "keys": {
+    "ed25519": {
+      "id": "gh-ed25519",
+      "env": "DID_ED25519_PRIVATE_B64"
+    }
+  },
+  "security_txt": {
+    "contact": "https://github.com/wantaekchoi",
+    "expires": "2026-12-31T00:00:00Z",
+    "preferred_languages": "ko, en",
+    "canonical": "https://wantaekchoi.github.io/.well-known/security.txt"
+  },
+  "domain_linkage": {
+    "valid_from": "2026-08-12T00:00:00Z",
+    "valid_until": "2027-08-12T00:00:00Z"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "achievement": {
+    "name": "Open Source Contributions",
+    "description": "Pull requests authored by the subject and merged into public open source projects.",
+    "criteria": {
+      "narrative": "Each listed contribution is a pull request that the upstream maintainers merged. The workflow re-checks authorship and merge status against the GitHub API on every run, and refuses to issue the credential if any listed contribution fails that check."
+    }
+  },
+  "exclude": []
+}

@@ -1,0 +1,12 @@
+build/
+signer/build/
+signer/.gradle/
+# setup.sh writes the key backup here. Anchored: scripts/backup/ is tooling and
+# must stay tracked.
+/backup/
+
+# Generated on every run and deployed straight from the runner. Committing them
+# meant a template instance started life serving the template author's DID
+# document and signed badge until its own first run overwrote them.
+/.well-known/
+/credentials/
