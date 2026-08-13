@@ -170,10 +170,14 @@ class HumansTxtTest(unittest.TestCase):
         self.assertIn("!=", errors[0])
 
 
+AVATAR = "data:image/png;base64,iVBORw0KGgo="
+
+
 def fake_credential():
     return {
         "id": "https://example.org/credentials/contributions.json",
-        "issuer": {"name": "someone"},
+        "issuer": {"name": "someone",
+                   "image": {"id": "https://github.com/someone.png"}},
         "credentialSubject": {"achievement": {"name": "Open Source Contributions"}},
     }
 
@@ -184,22 +188,22 @@ class BakeBadgeTest(unittest.TestCase):
         self.payload = json.dumps(self.cred, indent=2)
 
     def test_round_trip(self):
-        svg = bake_badge.bake(self.cred, self.payload)
+        svg = bake_badge.bake(self.cred, self.payload, AVATAR)
         self.assertEqual(bake_badge.extract(svg), self.payload)
 
     def test_output_is_well_formed_xml_with_the_ob_namespace(self):
         import xml.etree.ElementTree as ET
-        root = ET.fromstring(bake_badge.bake(self.cred, self.payload))
+        root = ET.fromstring(bake_badge.bake(self.cred, self.payload, AVATAR))
         self.assertEqual(root.tag, "{http://www.w3.org/2000/svg}svg")
         self.assertEqual(list(root)[0].tag, bake_badge.CREDENTIAL_TAG)
 
     def test_renders_byte_for_byte_twice(self):
-        self.assertEqual(bake_badge.bake(self.cred, self.payload),
-                         bake_badge.bake(self.cred, self.payload))
+        self.assertEqual(bake_badge.bake(self.cred, self.payload, AVATAR),
+                         bake_badge.bake(self.cred, self.payload, AVATAR))
 
     def test_cdata_terminator_refused(self):
         with self.assertRaises(ValueError):
-            bake_badge.bake(self.cred, self.payload + "]]>")
+            bake_badge.bake(self.cred, self.payload + "]]>", AVATAR)
 
     def test_markup_in_a_name_stays_text(self):
         """A profile name reaches the picture as text. It must not become markup,
@@ -208,7 +212,7 @@ class BakeBadgeTest(unittest.TestCase):
         cred = fake_credential()
         cred["issuer"]["name"] = "</svg><script>x</script>"
         payload = json.dumps(cred)
-        svg = bake_badge.bake(cred, payload)
+        svg = bake_badge.bake(cred, payload, AVATAR)
         root = ET.fromstring(svg)
         self.assertEqual(root.findall(".//{http://www.w3.org/2000/svg}script"), [])
         texts = [e.text for e in root.findall("{http://www.w3.org/2000/svg}text")]
@@ -216,7 +220,7 @@ class BakeBadgeTest(unittest.TestCase):
         self.assertEqual(bake_badge.extract(svg), payload)
 
     def test_second_credential_tag_refused(self):
-        svg = bake_badge.bake(self.cred, self.payload)
+        svg = bake_badge.bake(self.cred, self.payload, AVATAR)
         doubled = svg.replace("<title>",
                               "<openbadges:credential>x</openbadges:credential>\n<title>")
         with self.assertRaises(ValueError):
@@ -245,11 +249,11 @@ class BakeBadgeTest(unittest.TestCase):
         self.assertEqual(bake_badge.fit("x" * 200, 36), 11)
 
     def test_validator_accepts_what_the_baker_wrote(self):
-        svg = bake_badge.bake(self.cred, self.payload)
+        svg = bake_badge.bake(self.cred, self.payload, AVATAR)
         self.assertEqual(validate.check_baked_badge(svg, self.payload), [])
 
     def test_validator_detects_a_swapped_payload(self):
-        svg = bake_badge.bake(self.cred, self.payload)
+        svg = bake_badge.bake(self.cred, self.payload, AVATAR)
         errors = validate.check_baked_badge(svg, self.payload.replace("someone", "else"))
         self.assertEqual(len(errors), 1)
 
