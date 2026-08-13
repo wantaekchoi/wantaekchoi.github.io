@@ -24,59 +24,31 @@ ROOT = Path(__file__).resolve().parent.parent
 OB_NS = "https://purl.imsglobal.org/ob/v3p0"
 CREDENTIAL_TAG = f"{{{OB_NS}}}credential"
 
-# index.html's stack. No @font-face: a baked badge is copied around and must not
-# depend on fetching anything.
-FONT = "-apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, sans-serif"
-
 # The avatar is drawn from bytes, not from its URL. A baked badge is meant to be
 # copied, and an <image href="https://..."> would render as a hole everywhere the
-# copy is opened offline or by a renderer that refuses remote references. 256 is
-# the smallest size that still covers the 172px circle on a 2x display.
-AVATAR_SIZE = 256
-
-
-# Rough advance width of a sans-serif glyph as a fraction of the font size. Only
-# used to shrink text that would otherwise run past the edge, so an estimate is
-# enough and erring wide is the safe direction.
-GLYPH_RATIO = 0.58
-TEXT_BOX = 432
-
-
-def fit(text: str, preferred: int) -> int:
-    """Largest size at or below preferred that keeps text inside TEXT_BOX.
-
-    The achievement name comes from badge.json and the issuer name from a GitHub
-    profile, so neither has a length this file can assume."""
-    if not text:
-        return preferred
-    return max(11, min(preferred, int(TEXT_BOX / (len(text) * GLYPH_RATIO))))
+# copy is opened offline or by a renderer that refuses remote references. It fills
+# the whole frame now, so ask for the largest GitHub serves. Only a plain href:
+# repeating the URI in xlink:href for pre-SVG2 renderers doubled the file.
+AVATAR_SIZE = 460
 
 
 def render(credential: dict, payload: str, avatar: str) -> str:
-    achievement = credential["credentialSubject"]["achievement"]
-    name = achievement["name"]
+    """The picture is the issuer image and nothing else.
+
+    A baked badge carries its meaning inside, not painted on the front: the
+    achievement name, the issuer and every piece of evidence are in the credential
+    a reader extracts. Drawing them on top would only add a second copy free to
+    disagree with it."""
+    name = credential["credentialSubject"]["achievement"]["name"]
     issuer = credential["issuer"]["name"]
-    domain = credential["id"].split("/")[2]
     return f"""<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-     xmlns:openbadges="{OB_NS}"
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:openbadges="{OB_NS}"
      viewBox="0 0 512 512" width="512" height="512"
      role="img" aria-label="{_esc(name)}, issued to {_esc(issuer)}">
 <openbadges:credential><![CDATA[{payload}]]></openbadges:credential>
 <title>{_esc(name)}</title>
-<defs><clipPath id="avatar"><circle cx="256" cy="192" r="96"/></clipPath></defs>
-<rect width="512" height="512" rx="72" fill="#12161a"/>
-<image x="160" y="96" width="192" height="192" clip-path="url(#avatar)"
-       preserveAspectRatio="xMidYMid slice"
-       href="{avatar}" xlink:href="{avatar}"/>
-<circle cx="256" cy="192" r="96" fill="none" stroke="#4d5966" stroke-width="3"/>
-<circle cx="256" cy="192" r="104" fill="none" stroke="#232b33" stroke-width="2"/>
-<text x="256" y="360" text-anchor="middle" fill="#e8ecf0"
-      font-family="{FONT}" font-size="{fit(name, 36)}">{_esc(name)}</text>
-<text x="256" y="404" text-anchor="middle" fill="#8b96a2"
-      font-family="{FONT}" font-size="{fit(issuer, 24)}">{_esc(issuer)}</text>
-<text x="256" y="450" text-anchor="middle" fill="#5d6874"
-      font-family="{FONT}" font-size="{fit(domain, 19)}">{_esc(domain)}</text>
+<image x="0" y="0" width="512" height="512" preserveAspectRatio="xMidYMid slice"
+       href="{avatar}"/>
 </svg>
 """
 

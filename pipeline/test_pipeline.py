@@ -206,17 +206,16 @@ class BakeBadgeTest(unittest.TestCase):
             bake_badge.bake(self.cred, self.payload + "]]>", AVATAR)
 
     def test_markup_in_a_name_stays_text(self):
-        """A profile name reaches the picture as text. It must not become markup,
-        and the copy inside CDATA must survive unaltered."""
+        """The achievement and issuer names still reach <title> and aria-label.
+        Neither may become markup or break out of the attribute."""
         import xml.etree.ElementTree as ET
         cred = fake_credential()
-        cred["issuer"]["name"] = "</svg><script>x</script>"
+        cred["issuer"]["name"] = '</svg><script>x</script>"'
         payload = json.dumps(cred)
         svg = bake_badge.bake(cred, payload, AVATAR)
         root = ET.fromstring(svg)
         self.assertEqual(root.findall(".//{http://www.w3.org/2000/svg}script"), [])
-        texts = [e.text for e in root.findall("{http://www.w3.org/2000/svg}text")]
-        self.assertIn("</svg><script>x</script>", texts)
+        self.assertIn('</svg><script>x</script>"', root.get("aria-label"))
         self.assertEqual(bake_badge.extract(svg), payload)
 
     def test_second_credential_tag_refused(self):
@@ -232,21 +231,6 @@ class BakeBadgeTest(unittest.TestCase):
                "<openbadges:credential><![CDATA[{}]]></openbadges:credential></svg>")
         with self.assertRaises(ValueError):
             bake_badge.extract(svg)
-
-    def test_short_text_keeps_its_preferred_size(self):
-        self.assertEqual(bake_badge.fit("short", 24), 24)
-
-    def test_long_names_shrink_to_stay_inside_the_image(self):
-        name = "Open Source Contributions"
-        size = bake_badge.fit(name, 36)
-        self.assertLess(size, 36)
-        self.assertLessEqual(len(name) * bake_badge.GLYPH_RATIO * size,
-                             bake_badge.TEXT_BOX)
-
-    def test_shrinking_stops_at_a_legible_size(self):
-        """Past some length nothing both fits and can be read. Readable wins, and
-        the text runs wide rather than becoming a grey smear."""
-        self.assertEqual(bake_badge.fit("x" * 200, 36), 11)
 
     def test_validator_accepts_what_the_baker_wrote(self):
         svg = bake_badge.bake(self.cred, self.payload, AVATAR)
