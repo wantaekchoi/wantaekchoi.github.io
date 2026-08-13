@@ -55,9 +55,11 @@ jobs:
       - name: Render identity endpoints
         env:
           DID_ED25519_PRIVATE_B64: ${{ secrets.DID_ED25519_PRIVATE_B64 }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
           python3 -m pipeline.generate_did_document
           python3 -m pipeline.generate_security_txt
+          python3 -m pipeline.generate_humans_txt
 
       - name: Render credential
         if: inputs.identity_only != true
@@ -124,7 +126,7 @@ jobs:
       - name: Stage site
         run: |
           mkdir -p _site
-          for required in index.html .nojekyll .well-known credentials; do
+          for required in index.html humans.txt .nojekyll .well-known credentials; do
             cp -r "$required" _site/
           done
           find _site -type f | sort

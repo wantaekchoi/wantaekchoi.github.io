@@ -9,6 +9,7 @@ from pipeline import keys
 from pipeline import generate_did_document as gen_did
 from pipeline import generate_domain_linkage as gen_dl
 from pipeline import generate_security_txt as gen_sec
+from pipeline import generate_humans_txt as gen_hum
 from pipeline import validate_endpoints as validate
 
 ED_ARGS = ["-algorithm", "ED25519"]
@@ -131,6 +132,41 @@ class SecurityTxtTest(unittest.TestCase):
         self.assertEqual(lines[3],
                          "Canonical: https://example.org/.well-known/security.txt")
         self.assertTrue(text.endswith("\n"))
+
+
+class HumansTxtTest(unittest.TestCase):
+    USER = {"login": "someone", "name": "Some One", "location": "Seoul"}
+    DID = "did:web:example.org"
+
+    def test_render(self):
+        lines = gen_hum.build(self.USER, self.DID).splitlines()
+        self.assertEqual(lines[0], "/* TEAM */")
+        self.assertEqual(lines[2:], [
+            "\tDeveloper: Some One",
+            "\tGitHub: github.com/someone",
+            "\tDID: did:web:example.org",
+            "\tLocation: Seoul",
+        ])
+
+    def test_falls_back_to_login_and_drops_blank_location(self):
+        text = gen_hum.build({"login": "someone", "name": None, "location": "  "},
+                             self.DID)
+        self.assertIn("\tDeveloper: someone", text)
+        self.assertNotIn("Location", text)
+
+    def test_renders_byte_for_byte_twice(self):
+        self.assertEqual(gen_hum.build(self.USER, self.DID),
+                         gen_hum.build(self.USER, self.DID))
+
+    def test_validator_accepts_what_the_generator_wrote(self):
+        text = gen_hum.build(self.USER, self.DID)
+        self.assertEqual(validate.check_humans_txt(text, {"id": self.DID}), [])
+
+    def test_did_drift_detected(self):
+        text = gen_hum.build(self.USER, self.DID)
+        errors = validate.check_humans_txt(text, {"id": "did:web:other.example"})
+        self.assertEqual(len(errors), 1)
+        self.assertIn("!=", errors[0])
 
 
 class ValidateTest(unittest.TestCase):

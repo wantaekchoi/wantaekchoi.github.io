@@ -79,6 +79,23 @@ def check_security_txt(text):
     return errors
 
 
+def check_humans_txt(text, local_did):
+    """The DID line is the one that can go stale: it is copied out of the
+    rendered document, so a mismatch means the two were rendered apart."""
+    errors = []
+    if not text.startswith("/* TEAM */"):
+        errors.append("humans.txt does not open with /* TEAM */")
+    fields = dict(line.strip().split(": ", 1)
+                  for line in text.splitlines() if ": " in line)
+    for req in ("Developer", "GitHub", "DID"):
+        if req not in fields:
+            errors.append(f"humans.txt missing {req}")
+    if fields.get("DID") not in (None, local_did["id"]):
+        errors.append(f"humans.txt DID {fields['DID']!r} != did.json id "
+                      f"{local_did['id']!r}")
+    return errors
+
+
 def check_domain_linkage(resource, config):
     """DIF Well-Known DID Configuration.
 
@@ -175,6 +192,14 @@ def check_live(config, local_did, identity_only=False):
         errors.append(f"security.txt HTTP {status}")
     elif not ctype.startswith("text/plain"):
         errors.append(f"security.txt Content-Type {ctype!r}")
+    status, ctype, body = _fetch(f"{base}/humans.txt")
+    if status != 200:
+        errors.append(f"humans.txt HTTP {status}")
+    else:
+        if not ctype.startswith("text/plain"):
+            errors.append(f"humans.txt Content-Type {ctype!r}")
+        if body.decode() != (ROOT / "humans.txt").read_text():
+            errors.append("served humans.txt differs from what this run rendered")
     if not identity_only:
         # Compare content, not just status: a stale Pages artifact serves 200.
         for path in ("/.well-known/did-configuration.json",
@@ -231,6 +256,7 @@ def main():
     local_did = json.loads(did_path.read_text())
     errors = check_did_document(local_did)
     errors += check_security_txt((ROOT / ".well-known" / "security.txt").read_text())
+    errors += check_humans_txt((ROOT / "humans.txt").read_text(), local_did)
     linkage = ROOT / ".well-known" / "did-configuration.json"
     # Absent until the first signed run, and never rewritten during a rotation:
     # missing is a state to tolerate, not a failure. --live catches it once the

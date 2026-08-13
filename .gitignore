@@ -10,3 +10,4 @@ signer/.gradle/
 # document and signed badge until its own first run overwrote them.
 /.well-known/
 /credentials/
+/humans.txt
