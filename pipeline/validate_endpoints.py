@@ -62,7 +62,8 @@ def _expiry_error(label, value):
     margin = (datetime.datetime.now(datetime.timezone.utc)
               + datetime.timedelta(days=EXPIRES_MARGIN_DAYS))
     if exp < margin:
-        return f"{label} {value} is within {EXPIRES_MARGIN_DAYS} days — renew it"
+        return (f"{label} {value} is within {EXPIRES_MARGIN_DAYS} days — "
+                "renew it in config.json and push")
     return None
 
 
