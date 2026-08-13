@@ -10,6 +10,7 @@ from pipeline import generate_did_document as gen_did
 from pipeline import generate_domain_linkage as gen_dl
 from pipeline import generate_security_txt as gen_sec
 from pipeline import generate_humans_txt as gen_hum
+from pipeline import bake_badge
 from pipeline import validate_endpoints as validate
 
 ED_ARGS = ["-algorithm", "ED25519"]
@@ -167,6 +168,93 @@ class HumansTxtTest(unittest.TestCase):
         errors = validate.check_humans_txt(text, {"id": "did:web:other.example"})
         self.assertEqual(len(errors), 1)
         self.assertIn("!=", errors[0])
+
+
+def fake_credential():
+    return {
+        "id": "https://example.org/credentials/contributions.json",
+        "issuer": {"name": "someone"},
+        "credentialSubject": {"achievement": {"name": "Open Source Contributions"}},
+    }
+
+
+class BakeBadgeTest(unittest.TestCase):
+    def setUp(self):
+        self.cred = fake_credential()
+        self.payload = json.dumps(self.cred, indent=2)
+
+    def test_round_trip(self):
+        svg = bake_badge.bake(self.cred, self.payload)
+        self.assertEqual(bake_badge.extract(svg), self.payload)
+
+    def test_output_is_well_formed_xml_with_the_ob_namespace(self):
+        import xml.etree.ElementTree as ET
+        root = ET.fromstring(bake_badge.bake(self.cred, self.payload))
+        self.assertEqual(root.tag, "{http://www.w3.org/2000/svg}svg")
+        self.assertEqual(list(root)[0].tag, bake_badge.CREDENTIAL_TAG)
+
+    def test_renders_byte_for_byte_twice(self):
+        self.assertEqual(bake_badge.bake(self.cred, self.payload),
+                         bake_badge.bake(self.cred, self.payload))
+
+    def test_cdata_terminator_refused(self):
+        with self.assertRaises(ValueError):
+            bake_badge.bake(self.cred, self.payload + "]]>")
+
+    def test_markup_in_a_name_stays_text(self):
+        """A profile name reaches the picture as text. It must not become markup,
+        and the copy inside CDATA must survive unaltered."""
+        import xml.etree.ElementTree as ET
+        cred = fake_credential()
+        cred["issuer"]["name"] = "</svg><script>x</script>"
+        payload = json.dumps(cred)
+        svg = bake_badge.bake(cred, payload)
+        root = ET.fromstring(svg)
+        self.assertEqual(root.findall(".//{http://www.w3.org/2000/svg}script"), [])
+        texts = [e.text for e in root.findall("{http://www.w3.org/2000/svg}text")]
+        self.assertIn("</svg><script>x</script>", texts)
+        self.assertEqual(bake_badge.extract(svg), payload)
+
+    def test_second_credential_tag_refused(self):
+        svg = bake_badge.bake(self.cred, self.payload)
+        doubled = svg.replace("<title>",
+                              "<openbadges:credential>x</openbadges:credential>\n<title>")
+        with self.assertRaises(ValueError):
+            bake_badge.extract(doubled)
+
+    def test_credential_must_be_the_first_child(self):
+        svg = (f'<svg xmlns="http://www.w3.org/2000/svg" xmlns:openbadges="{bake_badge.OB_NS}">'
+               "<title>t</title>"
+               "<openbadges:credential><![CDATA[{}]]></openbadges:credential></svg>")
+        with self.assertRaises(ValueError):
+            bake_badge.extract(svg)
+
+    def test_short_text_keeps_its_preferred_size(self):
+        self.assertEqual(bake_badge.fit("short", 24), 24)
+
+    def test_long_names_shrink_to_stay_inside_the_image(self):
+        name = "Open Source Contributions"
+        size = bake_badge.fit(name, 36)
+        self.assertLess(size, 36)
+        self.assertLessEqual(len(name) * bake_badge.GLYPH_RATIO * size,
+                             bake_badge.TEXT_BOX)
+
+    def test_shrinking_stops_at_a_legible_size(self):
+        """Past some length nothing both fits and can be read. Readable wins, and
+        the text runs wide rather than becoming a grey smear."""
+        self.assertEqual(bake_badge.fit("x" * 200, 36), 11)
+
+    def test_validator_accepts_what_the_baker_wrote(self):
+        svg = bake_badge.bake(self.cred, self.payload)
+        self.assertEqual(validate.check_baked_badge(svg, self.payload), [])
+
+    def test_validator_detects_a_swapped_payload(self):
+        svg = bake_badge.bake(self.cred, self.payload)
+        errors = validate.check_baked_badge(svg, self.payload.replace("someone", "else"))
+        self.assertEqual(len(errors), 1)
+
+    def test_validator_reports_malformed_svg_instead_of_raising(self):
+        self.assertEqual(len(validate.check_baked_badge("<svg", self.payload)), 1)
 
 
 class ValidateTest(unittest.TestCase):

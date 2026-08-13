@@ -7,6 +7,7 @@ import urllib.error
 import urllib.request
 from pathlib import Path
 
+from pipeline import bake_badge
 from pipeline import keys
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -77,6 +78,21 @@ def check_security_txt(text):
         if expiry:
             errors.append(expiry)
     return errors
+
+
+def check_baked_badge(svg, signed):
+    """The image must carry the signed credential unchanged.
+
+    Extraction follows OB 3.0 section 5.3.2.2, so this fails for the same reason
+    a reader's extractor would: a malformed SVG, a missing or duplicated tag, or
+    a payload that is not what the signer produced."""
+    try:
+        recovered = bake_badge.extract(svg)
+    except Exception as e:
+        return [f"contributions.svg: {e}"]
+    if recovered != signed:
+        return ["contributions.svg carries a credential that is not the signed one"]
+    return []
 
 
 def check_humans_txt(text, local_did):
@@ -214,6 +230,19 @@ def check_live(config, local_did, identity_only=False):
                 errors.append(f"{path} served, but nothing was rendered locally")
             elif json.loads(body) != json.loads(local.read_text()):
                 errors.append(f"served {path} differs from what this run rendered")
+        status, ctype, body = _fetch(f"{base}/credentials/contributions.svg")
+        if status != 200:
+            errors.append(f"contributions.svg HTTP {status}")
+        else:
+            if not ctype.startswith("image/svg+xml"):
+                errors.append(f"contributions.svg Content-Type {ctype!r}")
+            svg = body.decode()
+            if svg != (ROOT / "credentials" / "contributions.svg").read_text():
+                errors.append("served contributions.svg differs from what this run baked")
+            # The point of baking is that the image and the endpoint agree, so
+            # check them against each other as served, not against local copies.
+            _, _, served_json = _fetch(f"{base}/credentials/contributions.json")
+            errors += check_baked_badge(svg, served_json.decode())
     errors += check_resolvable(local_did["id"])
     return errors
 
@@ -263,6 +292,11 @@ def main():
     # file is supposed to be there, because a 404 is unambiguous.
     if not args.identity_only and linkage.exists():
         errors += check_domain_linkage(json.loads(linkage.read_text()), config)
+    baked = ROOT / "credentials" / "contributions.svg"
+    if not args.identity_only and baked.exists():
+        errors += check_baked_badge(
+            baked.read_text(),
+            (ROOT / "credentials" / "contributions.json").read_text())
     if args.live:
         errors += check_live(config, local_did, args.identity_only)
     for e in errors:

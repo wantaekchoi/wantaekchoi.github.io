@@ -89,6 +89,12 @@ jobs:
             credentials/contributions.json \
             "$VERIFICATION_METHOD" "$CREATED" | tee validation.log
 
+      # After signing, and reading the signed file rather than rebuilding it, so
+      # the bytes in the image are the bytes that were proved.
+      - name: Bake the badge image
+        if: inputs.identity_only != true
+        run: python3 -m pipeline.bake_badge
+
       # OB30Inspector is Open Badges 3.0 only and rejects a DomainLinkageCredential
       # out of hand, so the signer verifies its own fresh proof against the DID
       # document rendered above. Wrapping happens after: the proof covers the
