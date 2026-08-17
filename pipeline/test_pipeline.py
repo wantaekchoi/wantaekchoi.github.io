@@ -11,6 +11,7 @@ from pipeline import generate_domain_linkage as gen_dl
 from pipeline import generate_security_txt as gen_sec
 from pipeline import generate_humans_txt as gen_hum
 from pipeline import bake_badge
+from pipeline import generate_badge as gen_badge
 from pipeline import validate_endpoints as validate
 
 ED_ARGS = ["-algorithm", "ED25519"]
@@ -180,6 +181,34 @@ def fake_credential():
                    "image": {"id": "https://github.com/someone.png"}},
         "credentialSubject": {"achievement": {"name": "Open Source Contributions"}},
     }
+
+
+class BadgeCredentialTest(unittest.TestCase):
+
+    MERGES = [
+        {"ref": "owner/repo#1", "url": "https://github.com/owner/repo/pull/1",
+         "title": "oldest", "merged_at": "2023-01-01T00:00:00Z"},
+        {"ref": "owner/repo#2", "url": "https://github.com/owner/repo/pull/2",
+         "title": "middle", "merged_at": "2024-06-01T00:00:00Z"},
+        {"ref": "owner/repo#3", "url": "https://github.com/owner/repo/pull/3",
+         "title": "newest", "merged_at": "2026-08-13T05:46:33Z"},
+    ]
+    BADGE = {"achievement": {"name": "Contributions",
+                             "description": "merged pull requests",
+                             "criteria": {"narrative": "merged upstream"}}}
+
+    def build(self):
+        return gen_badge.build(test_config(), self.BADGE, self.MERGES)
+
+    def test_evidence_is_newest_first(self):
+        self.assertEqual([e["description"] for e in self.build()["evidence"]],
+                         ["newest", "middle", "oldest"])
+
+    def test_valid_from_is_the_newest_merge(self):
+        self.assertEqual(self.build()["validFrom"], "2026-08-13T05:46:33Z")
+
+    def test_renders_byte_for_byte_twice(self):
+        self.assertEqual(json.dumps(self.build()), json.dumps(self.build()))
 
 
 class BakeBadgeTest(unittest.TestCase):

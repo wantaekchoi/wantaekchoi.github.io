@@ -186,7 +186,7 @@ def build(config: dict, badge: dict, merged: list) -> dict:
                 "name": m["ref"],
                 "description": m["title"],
             }
-            for m in merged
+            for m in reversed(merged)
         ],
         "credentialSchema": [{
             "id": "https://purl.imsglobal.org/spec/ob/v3p0/schema/json/"
