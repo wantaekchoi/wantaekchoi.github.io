@@ -7,7 +7,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: "0 1 * * 1"   # Mondays 10:00 KST - watches both expiry dates in config.json
+    - cron: "37 2 * * 1"
   workflow_dispatch:
     inputs:
       identity_only:
