@@ -10,7 +10,7 @@ repositories {
 
 dependencies {
     implementation("org.1edtech:inspector-vc:1.11.0")   // OB30Inspector + Danubetech, transitively
-    implementation("org.bouncycastle:bcprov-jdk18on:1.84")
+    implementation("org.bouncycastle:bcprov-jdk18on:1.85.2")
 }
 
 // tableschema-java pulls GeoTools, which depends on an artifact Oracle never published.
