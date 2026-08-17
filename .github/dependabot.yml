@@ -1,0 +1,14 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      time: "02:02"
+      timezone: Asia/Seoul
+  - package-ecosystem: gradle
+    directory: /signer
+    schedule:
+      interval: weekly
+      time: "02:02"
+      timezone: Asia/Seoul
