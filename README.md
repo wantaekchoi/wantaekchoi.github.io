@@ -1,12 +1,16 @@
 # wantaekchoi.github.io
 
-[한국어](README.ko.md) — Identity and credential endpoints, rendered and signed by
-GitHub Actions on every run: <https://wantaekchoi.github.io>
+[한국어](README.ko.md) — my personal site: <https://wantaekchoi.github.io>
 
-```bash
-gh repo create <your-username>.github.io --template wantaekchoi/wantaekchoi.github.io --public --clone
-cd <your-username>.github.io && ./setup.sh
-```
+The page itself is one hand-written `index.html`. Everything else under
+`.well-known/` and `credentials/` is rendered and signed by GitHub Actions on
+every push and once a week, from `config.json` and `badge.json`. Those files
+are not edited by hand.
 
-`setup.sh` checks the name, makes the key, and tells you what to do with the
-backup sheet. Nothing here is edited by hand afterwards.
+The contribution credential lists pull requests that upstream maintainers
+merged. The workflow re-checks authorship and merge status against the GitHub
+API on every run and refuses to issue the credential if any listed
+contribution fails that check.
+
+`setup.sh` creates the signing key and prints the backup sheet. It is a
+one-time step, kept here as the reference for rotating that key.
