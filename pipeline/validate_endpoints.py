@@ -3,6 +3,7 @@ import argparse
 import datetime
 import json
 import sys
+import time
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -189,10 +190,55 @@ def _fetch(url):
         return 0, "", str(e).encode()
 
 
+# Pages keeps serving the previous artifact for a moment after the deploy step
+# reports success, so the first fetch can read the old bytes off an edge that has
+# not caught up. That is propagation, not a defect — the same reasoning as
+# check_resolvable below. Wait it out before calling a difference a difference.
+#
+# The budget is shared across every live check rather than spent per URL: once
+# one path is observed current the deployment has landed, so the checks after it
+# find their bytes on the first try and pay nothing. A deploy that genuinely
+# published the wrong thing still fails, one budget later.
+SETTLE_BUDGET_SECONDS = 90
+_SETTLE_BACKOFF = (2, 4, 8, 15, 30)
+
+
+def _fetch_settled(url, is_current, deadline):
+    """Fetch until the served body is what this run produced, or time runs out.
+
+    Returns the last (status, ctype, body) either way, so callers compare
+    exactly as they did before and keep their own error wording.
+    """
+    for wait in _SETTLE_BACKOFF:
+        status, ctype, body = _fetch(url)
+        if status == 200 and is_current(body):
+            return status, ctype, body
+        if time.monotonic() + wait > deadline:
+            break
+        time.sleep(wait)
+    return _fetch(url)
+
+
+def _json_equals(expected):
+    """Body predicate for endpoints compared as JSON, not as bytes.
+
+    Byte equality would make key order or whitespace look like a stale artifact
+    and burn the whole budget waiting for a difference that never settles.
+    """
+    def matches(body):
+        try:
+            return json.loads(body) == expected
+        except json.JSONDecodeError:
+            return False
+    return matches
+
+
 def check_live(config, local_did, identity_only=False):
     errors = []
+    deadline = time.monotonic() + SETTLE_BUDGET_SECONDS
     base = f"https://{config['domain']}"
-    status, ctype, body = _fetch(f"{base}/.well-known/did.json")
+    status, ctype, body = _fetch_settled(
+        f"{base}/.well-known/did.json", _json_equals(local_did), deadline)
     if status != 200:
         errors.append(f"did.json HTTP {status}")
     else:
@@ -209,39 +255,50 @@ def check_live(config, local_did, identity_only=False):
         errors.append(f"security.txt HTTP {status}")
     elif not ctype.startswith("text/plain"):
         errors.append(f"security.txt Content-Type {ctype!r}")
-    status, ctype, body = _fetch(f"{base}/humans.txt")
+    local_humans = (ROOT / "humans.txt").read_text()
+    status, ctype, body = _fetch_settled(
+        f"{base}/humans.txt", lambda b: b.decode() == local_humans, deadline)
     if status != 200:
         errors.append(f"humans.txt HTTP {status}")
     else:
         if not ctype.startswith("text/plain"):
             errors.append(f"humans.txt Content-Type {ctype!r}")
-        if body.decode() != (ROOT / "humans.txt").read_text():
+        if body.decode() != local_humans:
             errors.append("served humans.txt differs from what this run rendered")
     if not identity_only:
         # Compare content, not just status: a stale Pages artifact serves 200.
         for path in ("/.well-known/did-configuration.json",
                      "/credentials/contributions.json",
                      "/credentials/achievements/contributions.json"):
-            status, _, body = _fetch(f"{base}{path}")
+            local = ROOT / path.lstrip("/")
+            # Nothing rendered locally is its own error below; wait for nothing.
+            expected = json.loads(local.read_text()) if local.exists() else None
+            status, _, body = _fetch_settled(
+                f"{base}{path}",
+                _json_equals(expected) if local.exists() else lambda _b: True,
+                deadline)
             if status != 200:
                 errors.append(f"{path} HTTP {status}")
                 continue
-            local = ROOT / path.lstrip("/")
             if not local.exists():
                 errors.append(f"{path} served, but nothing was rendered locally")
-            elif json.loads(body) != json.loads(local.read_text()):
+            elif json.loads(body) != expected:
                 errors.append(f"served {path} differs from what this run rendered")
-        status, ctype, body = _fetch(f"{base}/credentials/contributions.svg")
+        local_svg = (ROOT / "credentials" / "contributions.svg").read_text()
+        status, ctype, body = _fetch_settled(
+            f"{base}/credentials/contributions.svg",
+            lambda b: b.decode() == local_svg, deadline)
         if status != 200:
             errors.append(f"contributions.svg HTTP {status}")
         else:
             if not ctype.startswith("image/svg+xml"):
                 errors.append(f"contributions.svg Content-Type {ctype!r}")
             svg = body.decode()
-            if svg != (ROOT / "credentials" / "contributions.svg").read_text():
+            if svg != local_svg:
                 errors.append("served contributions.svg differs from what this run baked")
             # The point of baking is that the image and the endpoint agree, so
             # check them against each other as served, not against local copies.
+            # Already settled above, so this reads the same edge on the first try.
             _, _, served_json = _fetch(f"{base}/credentials/contributions.json")
             errors += check_baked_badge(svg, served_json.decode())
     errors += check_resolvable(local_did["id"])

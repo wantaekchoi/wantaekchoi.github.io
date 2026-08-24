@@ -304,5 +304,99 @@ class ValidateTest(unittest.TestCase):
         self.assertTrue(any("Contact" in e for e in errors))
 
 
+class FetchSettledTest(unittest.TestCase):
+    """The live checks must outlast Pages propagation without hiding a bad deploy.
+
+    A run on 2026-08-24 failed because the fetch read the previous artifact ~1.7s
+    after the deploy reported success. The deploy was correct; the comparison was
+    early. These stub the network and the clock so the wait is not actually slept.
+    """
+
+    def setUp(self):
+        # A fake clock, because a stubbed sleep that does not advance time would
+        # let the deadline test pass for the wrong reason.
+        self.slept = []
+        self.now = 1000.0
+        self._real_sleep, self._real_monotonic = validate.time.sleep, validate.time.monotonic
+
+        def sleep(seconds):
+            self.slept.append(seconds)
+            self.now += seconds
+        validate.time.sleep = sleep
+        validate.time.monotonic = lambda: self.now
+
+    def tearDown(self):
+        validate.time.sleep = self._real_sleep
+        validate.time.monotonic = self._real_monotonic
+
+    def _stub_fetch(self, bodies):
+        """Serve each body in turn, repeating the last one forever."""
+        self.calls = 0
+
+        def fetch(url):
+            body = bodies[min(self.calls, len(bodies) - 1)]
+            self.calls += 1
+            return 200, "application/json", body
+        validate._fetch = fetch
+
+    def test_returns_immediately_when_already_current(self):
+        real = validate._fetch
+        try:
+            self._stub_fetch([b'{"a": 1}'])
+            status, _, body = validate._fetch_settled(
+                "http://x", validate._json_equals({"a": 1}), self._deadline())
+            self.assertEqual((status, body), (200, b'{"a": 1}'))
+            self.assertEqual(self.calls, 1)
+            self.assertEqual(self.slept, [])
+        finally:
+            validate._fetch = real
+
+    def test_waits_out_a_stale_edge_and_then_succeeds(self):
+        real = validate._fetch
+        try:
+            # Two stale reads, then the deployment lands.
+            self._stub_fetch([b'{"a": 0}', b'{"a": 0}', b'{"a": 1}'])
+            status, _, body = validate._fetch_settled(
+                "http://x", validate._json_equals({"a": 1}), self._deadline())
+            self.assertEqual(body, b'{"a": 1}')
+            self.assertEqual(self.calls, 3)
+            self.assertEqual(self.slept, [2, 4])
+        finally:
+            validate._fetch = real
+
+    def test_gives_up_so_a_genuinely_wrong_deploy_still_fails(self):
+        real = validate._fetch
+        try:
+            self._stub_fetch([b'{"a": 0}'])
+            _, _, body = validate._fetch_settled(
+                "http://x", validate._json_equals({"a": 1}), self._deadline())
+            # The caller compares this and reports its own mismatch.
+            self.assertEqual(body, b'{"a": 0}')
+            self.assertEqual(self.slept, list(validate._SETTLE_BACKOFF))
+        finally:
+            validate._fetch = real
+
+    def test_respects_the_deadline_instead_of_the_full_backoff(self):
+        real = validate._fetch
+        try:
+            self._stub_fetch([b'{"a": 0}'])
+            # Only the first two waits fit in five seconds.
+            validate._fetch_settled(
+                "http://x", validate._json_equals({"a": 1}),
+                validate.time.monotonic() + 5)
+            self.assertEqual(self.slept, [2])
+        finally:
+            validate._fetch = real
+
+    def test_json_predicate_ignores_key_order(self):
+        matches = validate._json_equals({"a": 1, "b": 2})
+        self.assertTrue(matches(b'{"b": 2, "a": 1}'))
+        self.assertFalse(matches(b'{"a": 1}'))
+        self.assertFalse(matches(b'not json'))
+
+    def _deadline(self):
+        return validate.time.monotonic() + validate.SETTLE_BUDGET_SECONDS
+
+
 if __name__ == "__main__":
     unittest.main()
